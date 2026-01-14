@@ -1,10 +1,11 @@
 "use client";
 
-import Image from "next/image";
-import { useSearchParams, useRouter } from "next/navigation";
 import { i18n, Lang } from "@/lib/i18n";
+import Image from "next/image";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
-export default function Home() {
+function HomeContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const langParam = searchParams.get("lang") as Lang | null;
@@ -27,6 +28,23 @@ export default function Home() {
       <FAQs t={t.faq} />
       <FinalCTA t={t.finalCta} />
     </main>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={
+      <main>
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-600 mx-auto"></div>
+            <p className="mt-4 text-slate-600">Loading...</p>
+          </div>
+        </div>
+      </main>
+    }>
+      <HomeContent />
+    </Suspense>
   );
 }
 
